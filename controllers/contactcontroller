@@ -1,0 +1,65 @@
+
+const asyncHandler=require('express-async-handler')
+const Contact=require("../models/contactModel")
+
+
+//Get all contacts
+const getContacts= asyncHandler(async(req,res)=>{
+    const contacts= await Contact.find();
+    console.log(contacts)
+    res.status(200).json(contacts);
+})
+
+//post all contacts 
+const createContact= asyncHandler(async(req,res)=>{
+
+    console.log(req.body);
+    const {name,phone,email}=req.body
+    console.log(name)
+    if (!name || !phone || !email){
+        console.log("Please enter every details ........")
+        res.status(400)
+        throw new Error("all fields are mandotory")
+    }
+
+    const contactCreate= await Contact.create({
+        name,
+        email, 
+        phone,
+    });
+
+    res.status(200).json(contactCreate);
+})
+
+
+//delete contact
+
+const deleteContact= asyncHandler(async(req,res)=>{
+    
+    res.status(200).json({message:"delete"});
+})
+
+// get one contact
+const getContact =  asyncHandler(async(req,res)=>{
+
+    const contact=await Contact.findById(req.params.id)
+    if(!contact){
+        res.status(400);
+        throw new Error("Contact not foujd");
+    }
+    res.status(200).json(contact)
+    
+})
+
+// edit contact
+const editContact= asyncHandler(async(req,res)=>{
+    res.status(200).json({message:"edit contact"})
+})
+
+module.exports={
+    getContacts,
+    getContact,
+    createContact,
+    deleteContact,
+    editContact
+}
